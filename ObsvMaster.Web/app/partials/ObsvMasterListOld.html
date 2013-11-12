@@ -1,0 +1,40 @@
+﻿<br />
+<form class="well form-inline">
+    <div class="form-group">
+        <div class ="col-lg">
+            <select ng-model="vesselNameSearch" ng-options="s.Name as s.Name for s in vesselList" class="form-control">
+                <option value="">  - Vessel -  </option>
+            </select>
+        </div>
+    </div>
+</form>
+<table class="table table-striped table-condensed table-hover">
+    <thead>
+        <th my-table-header order="'VesselName'" by="order" reverse="reverse">Vessel Name</th>
+        <th my-table-header order="'StartDate'" by="order" reverse="reverse">Start Date</th>
+        <th my-table-header order="'StartPortName'" by="order" reverse="reverse">Start Port</th>
+        <th my-table-header order="'EndDate'" by="order" reverse="reverse">End Date</th>
+        <th my-table-header order="'EndPortName'" by="order" reverse="reverse">End Port</th>
+        <th my-table-header order="'ObsvCode'" by="order" reverse="reverse">Obsv</th>
+        <th my-table-header order="'ObsvTripCode'" by="order" reverse="reverse">Obsv Trip</th>
+        <th my-table-header order="'ObsvProgCode'" by="order" reverse="reverse">Obsv Prog</th>
+        <th my-table-header order="'LastModifiedDate'" by="order" reverse="reverse">Last Modified Date</th>
+        <th my-table-header order="'LastModifiedBy'" by="order" reverse="reverse">Last Modified By</th>
+        <th><a ng-href="#/new"><i class="fa fa-plus-square fa-2x"></i></a></th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="trip in obsvMasterList | orderBy:order:reverse">
+            <td>{{trip.VesselName}}</td>
+            <td style="white-space: nowrap;">{{trip.StartDate | date:'dd-MMM-yyyy'}}</td>
+            <td>{{trip.StartPortName}}</td>
+            <td style="white-space: nowrap;">{{trip.EndDate | date:'dd-MMM-yyyy'}}</td>
+            <td>{{trip.EndPortName}}</td>
+            <td>{{trip.ObsvCode}}</td>
+            <td>{{trip.ObsvTripCode}}</td>
+            <td>{{trip.ObsvProgCode}}</td>
+            <td style="white-space: nowrap;">{{trip.LastModifiedDate | date:'dd-MMM-yyyy'}}</td>
+            <td>{{trip.LastModifiedBy}}</td>
+            <td><a ng-href="#/edit/{{trip.Id}}"><i class="fa fa-edit"></i></a></td>
+        </tr>
+    </tbody>
+</table>
