@@ -4,7 +4,6 @@
 controllers.controller("ObsvMasterListCtrl", ['$scope', 'ObsvMasterResource', '$q', ObsvMasterListCtrl]);
 controllers.controller("ObsvMasterCreateCtrl", ['$scope', '$location', 'ObsvMasterResource', ObsvMasterCreateCtrl]);
 controllers.controller("ObsvMasterEditCtrl", ['$scope', '$location', 'ObsvMasterResource', '$routeParams', ObsvMasterEditCtrl]);
-//controllers.controller("ObsvMasterListCtrlNew", ['$scope', 'ObsvMasterResource','$q', ObsvMasterListCtrlNew]);
 
 function GetHeader() {
     return [
@@ -20,36 +19,6 @@ function GetHeader() {
     ]
 }
 
-//function ObsvMasterListCtrl($scope, Info, ObsvMasterResource) {
-//    //$scope.obsvMasterList = ObsvMasterResource.query({ vesselName: $scope.VesselNameSearch });
-//    $scope.vesselList = ObsvMasterResource.getAllVessels();
-
-//    $scope.search = function () {
-//        ObsvMasterResource.query({ vesselName: $scope.vesselNameSearch},
-//            function (obsvMasterList) {
-//                var cnt = obsvMasterList.length;
-//                $scope.no_more = cnt < $scope.limit;
-//                $scope.obsvMasterList = $scope.obsvMasterList.concat(obsvMasterList);
-//            }
-//        )
-//    };
-
-//    $scope.reset = function () {
-//        $scope.offset = 0;
-//        $scope.obsvMasterList = [];
-//        $scope.search();
-//    };
-
-//    $scope.getMore = function () {
-//        $scope.offset = $scope.offset + $scope.limit;
-//        $scope.search();
-//    };
-
-//    $scope.limit = 20;
-//    $scope.offset = 0;
-//    $scope.reset();
-//}
-
 function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
     $scope.vesselList = ObsvMasterResource.getAllVessels();
     $scope.portList = ObsvMasterResource.getAllPorts();
@@ -62,7 +31,6 @@ function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
             return "";
         }
     };
-
 
     $scope.save = function () {
         ObsvMasterResource.save($scope.trip, function () {

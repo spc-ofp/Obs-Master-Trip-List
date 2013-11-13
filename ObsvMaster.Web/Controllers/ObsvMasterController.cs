@@ -21,7 +21,7 @@ namespace ObsvMaster.Web.Controllers
             _obsvMasterRepo = new ObsvMasterRepository(WebApiApplication.UnitOfWork.Session);
         }
 
-        public IEnumerable<MasterObsTripModel> Get(String vesselName = "",int dateYear =0,string port="",string obsvCode="",string obsvTripCode="",string obsvProgCode="",int lastModifiedDateYear=0,string lastModifiedBy="", int pageSize = 50, int offset = 0,string sortedBy="",string sortDir="")
+        public IEnumerable<MasterObsTripModel> Get(String vesselName = "",int dateYear =0,string port="",string obsvCode="",string obsvTripCode="",string obsvProgCode="",int lastModifiedDateYear=0,string lastModifiedBy="",string statusCode="", int pageSize = 50, int offset = 0,string sortedBy="",string sortDir="")
         {
             if (pageSize < 10)
                 pageSize = 10;
@@ -29,7 +29,7 @@ namespace ObsvMaster.Web.Controllers
                 if (pageSize > 300)
                     pageSize = 300;
 
-            IEnumerable<MasterObsTrip> masterTripList = _obsvMasterRepo.GetObsTrips(vesselName, dateYear, port, obsvCode,obsvTripCode,obsvProgCode,lastModifiedDateYear,lastModifiedBy, pageSize, offset, sortedBy, sortDir);
+            IEnumerable<MasterObsTrip> masterTripList = _obsvMasterRepo.GetObsTrips(vesselName, dateYear, port, obsvCode,obsvTripCode,obsvProgCode,lastModifiedDateYear,lastModifiedBy,statusCode ,pageSize, offset, sortedBy, sortDir);
             IList<MasterObsTripModel> masterTripModelList = new List<MasterObsTripModel>();
             foreach (MasterObsTrip trip in masterTripList)
                 masterTripModelList.Add(new MasterObsTripModel(trip));
@@ -50,9 +50,9 @@ namespace ObsvMaster.Web.Controllers
             return _repository.GetAll<Status>().Select(x => new { x.Code,x.Label });
         }
 
-        public HttpResponseMessage GetCount(String vesselName = "", int dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int lastModifiedDateYear = 0, string lastModifiedBy = "")
+        public HttpResponseMessage GetCount(String vesselName = "", int dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "")
         {
-            return new HttpResponseMessage { Content = new StringContent("{\"count\":" + _obsvMasterRepo.GetObsTrips(vesselName, dateYear, port, obsvCode,obsvTripCode,obsvProgCode,lastModifiedDateYear,lastModifiedBy).Count.ToString() + "}", System.Text.Encoding.UTF8, "application/json") };
+            return new HttpResponseMessage { Content = new StringContent("{\"count\":" + _obsvMasterRepo.GetObsTrips(vesselName, dateYear, port, obsvCode, obsvTripCode, obsvProgCode, lastModifiedDateYear, lastModifiedBy, statusCode).Count.ToString() + "}", System.Text.Encoding.UTF8, "application/json") };
         }
 
         public IEnumerable<Object> GetVesselNames()
@@ -88,6 +88,7 @@ namespace ObsvMaster.Web.Controllers
             search = search.ToUpper();
             return _repository.Find<Program>(x => x.Code.ToUpper().StartsWith(search)).Select(x => new { x.Code }).Take(10);
         }
+
 
         public MasterObsTripModel Get(int id)
         {

@@ -219,10 +219,10 @@
     <Content Include="app\js\controllers.js" />
     <Content Include="app\js\directives.js" />
     <Content Include="app\js\services.js" />
-    <Content Include="app\partials\ObsvMasterListNew.html" />
+    <Content Include="app\partials\ObsvMasterList.html" />
     <Content Include="app\partials\header.html" />
     <Content Include="app\partials\ObsvMasterDetail.html" />
-    <Content Include="app\partials\ObsvMasterList.html" />
+    <Content Include="app\partials\ObsvMasterListOld.html" />
     <Content Include="app\Scripts\angular-animate.min.js" />
     <Content Include="app\Scripts\angular-resource.min.js" />
     <Content Include="app\Scripts\angular-route.min.js" />

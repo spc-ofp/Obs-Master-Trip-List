@@ -18,7 +18,7 @@ namespace ObsvMaster.DAL.Repositories
             _session = session;
         }
 
-        public List<MasterObsTrip> GetObsTrips(String vesselName, int dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int lastModifiedDateYear = 0, string lastModifiedBy = "", int pageSize = -1, int offset = 0, string sortedBy = "", string sortDir = "")
+        public List<MasterObsTrip> GetObsTrips(String vesselName, int dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "",int pageSize = -1, int offset = 0, string sortedBy = "", string sortDir = "")
         {
             var query = _session.Query<MasterObsTrip>();
             if (!String.IsNullOrEmpty(vesselName))
@@ -37,6 +37,8 @@ namespace ObsvMaster.DAL.Repositories
                 query = query.Where(x => x.LastModifiedBy == lastModifiedBy);
             if (lastModifiedDateYear > 0)
                 query = query.Where(x => x.LastModifiedDate.Year == lastModifiedDateYear);
+            if (!String.IsNullOrEmpty(statusCode))
+                query = query.Where(x => x.Status.Code == statusCode);
             if (!String.IsNullOrEmpty(sortedBy))
             {
                 switch (sortedBy)
@@ -70,6 +72,9 @@ namespace ObsvMaster.DAL.Repositories
                         break;
                     case "LastModifiedBy":
                         query = (sortDir.ToUpper() == "ASC") ? query.OrderBy(x => x.LastModifiedBy) : query.OrderByDescending(x => x.LastModifiedBy);
+                        break;
+                    case "Status":
+                        query = (sortDir.ToUpper() == "ASC") ? query.OrderBy(x => x.Status.Code) : query.OrderByDescending(x => x.Status.Code);
                         break;
                 }
             }
