@@ -20,6 +20,7 @@ namespace ObsvMaster.Domain
         public virtual Status Status { get; set; }
         public virtual DateTime LastModifiedDate { get; set; }
         public virtual String LastModifiedBy { get; set; }
+        public virtual bool IsActive { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -1,9 +1,8 @@
 ﻿var controllers = angular.module('controllers', [])
 
-
 controllers.controller("ObsvMasterListCtrl", ['$scope', 'ObsvMasterResource', '$q', ObsvMasterListCtrl]);
 controllers.controller("ObsvMasterCreateCtrl", ['$scope', '$location', 'ObsvMasterResource', ObsvMasterCreateCtrl]);
-controllers.controller("ObsvMasterEditCtrl", ['$scope', '$location', 'ObsvMasterResource', '$routeParams', ObsvMasterEditCtrl]);
+controllers.controller("ObsvMasterEditCtrl", ['$scope', '$location', 'ObsvMasterResource', '$routeParams','$q', ObsvMasterEditCtrl]);
 
 function GetHeader() {
     return [
@@ -20,44 +19,8 @@ function GetHeader() {
 }
 
 function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
-    $scope.vesselList = ObsvMasterResource.getAllVessels();
-    $scope.portList = ObsvMasterResource.getAllPorts();
-
-    $scope.obsvProgTypeAhead = function (viewValue) {
-        if (viewValue.length < 10) {
-            return ObsvMasterResource.getObsProgLookUp({ search: viewValue }).$promise;
-        } else {
-            console.log("not searching for value:", viewValue);
-            return "";
-        }
-    };
-
-    $scope.save = function () {
-        ObsvMasterResource.save($scope.trip, function () {
-            $location.path('/');
-        }, function () {
-            console.log("insert failed");
-        });
-    };
-}
-
-function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams) {
-    $scope.vesselList = ObsvMasterResource.getAllVessels();
-    $scope.portList = ObsvMasterResource.getAllPorts();
-    $scope.trip = ObsvMasterResource.get({ id: $routeParams.itemId });
-    $scope.historyList = ObsvMasterResource.getHistory({ id: $routeParams.itemId });
-    $scope.headers = [
-        { title: 'Vessel', value: 'VesselName' },
-        { title: 'Dates', value: 'StartDate' },
-        { title: 'Ports', value: 'StartPortName' },
-        { title: 'Obsv Code', value: 'ObsvCode' },
-        { title: 'Obsv Trip', value: 'ObsvTripCode' },
-        { title: 'Obsv Prog', value: 'ObsvProgCode' },
-        { title: 'Status', value: 'Status' },
-        { title: 'Updated', value: 'LastModifiedDate' },
-        { title: 'By', value: 'LastModifiedBy' }
-    ];
-    $scope.statusList = ObsvMasterResource.getAllStatus();
+    //$scope.vesselList = ObsvMasterResource.getAllVessels();
+    //$scope.portList = ObsvMasterResource.getAllPorts();
 
     $scope.portTypeAhead = function (viewValue) {
         if (viewValue.length < 10) {
@@ -86,6 +49,76 @@ function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams)
         }
     };
 
+    $scope.statusList = ObsvMasterResource.getAllStatus();
+
+    $scope.save = function () {
+        ObsvMasterResource.save($scope.trip, function () {
+            $location.path('/');
+        }, function () {
+            console.log("insert failed");
+        });
+    };
+}
+
+function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams,$q) {
+    //$scope.vesselList = ObsvMasterResource.getAllVessels();
+    //$scope.portList = ObsvMasterResource.getAllPorts();
+    
+
+    $scope.headers = [
+        { title: 'Vessel', value: 'VesselName' },
+        { title: 'Dates', value: 'StartDate' },
+        { title: 'Ports', value: 'StartPortName' },
+        { title: 'Obsv Code', value: 'ObsvCode' },
+        { title: 'Obsv Trip', value: 'ObsvTripCode' },
+        { title: 'Obsv Prog', value: 'ObsvProgCode' },
+        { title: 'Status', value: 'Status' },
+        { title: 'Updated', value: 'LastModifiedDate' },
+        { title: 'By', value: 'LastModifiedBy' }
+    ];
+
+    $scope.statusList = ObsvMasterResource.getAllStatus();
+
+    $scope.portTypeAhead = function (viewValue) {
+        if (viewValue.length < 10) {
+            return ObsvMasterResource.getPortsLookUp({ search: viewValue }).$promise;
+        } else {
+            console.log("not searching for value:", viewValue);
+            return "";
+        }
+    };
+
+    $scope.setKnownObserver = function ($item, $model, $label) {
+        console.log($item);
+        $scope.selectedObserver = $item;
+    };
+
+    $scope.observerTypeAhead = function (viewValue) {
+        if (viewValue.length < 10) {
+            return ObsvMasterResource.getObserverLookUp({ search: viewValue }).$promise;
+        } else {
+            console.log("not searching for value:", viewValue);
+            return "";
+        }
+    };
+
+    $scope.obsvProgTypeAhead = function (viewValue) {
+        if (viewValue.length < 10) {
+            return ObsvMasterResource.getObsProgLookUp({ search: viewValue }).$promise;
+        } else {
+            console.log("not searching for value:", viewValue);
+            return "";
+        }
+    };
+
+    $scope.vesselTypeAhead = function (viewValue) {
+        if (viewValue.length < 10) {
+            return ObsvMasterResource.getVesselsLookUp({ search: viewValue }).$promise;
+        } else {
+            console.log("not searching for value:", viewValue);
+            return "";
+        }
+    };
 
     $scope.save = function () {
         var startDate = moment($scope.trip.StartDate).format("YYYY-MM-DDT") + "12:00:00";
@@ -96,6 +129,21 @@ function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams)
             $location.path('/');
         });
     }
+
+    
+    return $q.all([
+        ObsvMasterResource.get({ id: $routeParams.itemId }).$promise,
+        ObsvMasterResource.getHistory({ id: $routeParams.itemId }).$promise
+    ]).then(function (data) {
+        $scope.trip = data[0];
+        $scope.historyList = data[1];
+        $scope.selectedObserver = ObsvMasterResource.getObserver({ code: $scope.trip.ObsvCode });
+    }, function () {
+        $scope.trip = {};
+        $scope.historyList = {};
+        $scope.selectedObserver = {};
+    });
+
 }
 
 function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
@@ -121,6 +169,23 @@ function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
         $scope.filterCriteria.lastModifiedBy = undefined;
         $scope.fetchResult();
     };
+
+    $scope.askDelete = function () {
+        var itemId = this.trip.Id;
+        bootbox.confirm("Confirm delete?", function (result) {
+            if (result === true) {
+                $scope.delete(itemId);
+                $scope.$apply();
+            }
+        });
+    }
+
+    $scope.delete = function (itemId) {
+        ObsvMasterResource.delete({ id: itemId }, function () {
+            $("#trip_" + itemId).fadeOut();
+            toastr.success("Check List element deleted!");
+        });
+    }
 
     //called when navigate to another page in the pagination
     $scope.selectPage = function (page) {
@@ -205,8 +270,6 @@ function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
         }
     };
 
-
-
     $scope.obsvProgTypeAhead = function (viewValue) {
         if (viewValue.length < 10) {
             return ObsvMasterResource.getObsProgLookUp({ search: viewValue }).$promise;
@@ -216,9 +279,8 @@ function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
         }
     };
 
-    
+    $scope.statusList = ObsvMasterResource.getAllStatus();
 
     return $scope;
-
 }
 

@@ -21,6 +21,7 @@ namespace ObsvMaster.DAL.Repositories
         public List<MasterObsTrip> GetObsTrips(String vesselName, int? dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int? lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "",int pageSize = -1, int offset = 0, string sortedBy = "", string sortDir = "")
         {
             var query = _session.Query<MasterObsTrip>();
+            query = query.Where(x => x.IsActive == true);
             if (!String.IsNullOrEmpty(vesselName))
                 query = query.Where(x => x.Vessel.Name.Contains(vesselName));
             if (dateYear.HasValue && dateYear > 0)

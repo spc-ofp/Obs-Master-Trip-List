@@ -33,7 +33,7 @@ directives.directive('onEnterBlur', function() {
 
 directives.directive('sortBy', function () {
     return {
-        template: '<a ng-click="sort(sortvalue)"><span ng-transclude=""></span><span ng-show="sortedby == sortvalue"> <i ng-class="{true: \'fa fa-arrow-circle-up\', false: \'fa fa-arrow-circle-down\'}[sortdir == \'asc\']"></i></span></a>',
+        template: '<a ng-click="sort(sortvalue)"><span ng-transclude=""></span><span ng-show="sortedby == sortvalue"> <i ng-class="{true: \'fa fa-sort-asc\', false: \'fa fa-sort-desc\'}[sortdir == \'asc\']"></i></span></a>',
         restrict: 'E',
         transclude: true,
         replace: true,
@@ -57,29 +57,29 @@ directives.directive('sortBy', function () {
     };
 });
 
-directives.directive('myTableHeader', function () {
-    return {
-        restrict: 'A',
-        transclude: true,
-        template: '<a ng-click="onClick()" style="cursor:pointer">' +
-                     '<span ng-transclude></span>' +
-                    '&nbsp;<i ng-class="{\'fa fa-arrow-circle-down\' : order === by && !reverse,  \'fa fa-arrow-circle-up\' : order===by && reverse}"></i>' +
-                  '</a>',
-        scope: {
-            order: '=',
-            by: '=',
-            reverse: '='
-        },
-        link: function (scope, element, attrs) {
-            scope.onClick = function () {
-                if (scope.order === scope.by) {
-                    scope.reverse = !scope.reverse
-                } else {
-                    scope.by = scope.order;
-                    scope.reverse = false;
-                }
-            }
-        }
-    };
-});
+//directives.directive('myTableHeader', function () {
+//    return {
+//        restrict: 'A',
+//        transclude: true,
+//        template: '<a ng-click="onClick()" style="cursor:pointer">' +
+//                     '<span ng-transclude></span>' +
+//                    '&nbsp;<i ng-class="{\'fa fa-arrow-circle-down\' : order === by && !reverse,  \'fa fa-arrow-circle-up\' : order===by && reverse}"></i>' +
+//                  '</a>',
+//        scope: {
+//            order: '=',
+//            by: '=',
+//            reverse: '='
+//        },
+//        link: function (scope, element, attrs) {
+//            scope.onClick = function () {
+//                if (scope.order === scope.by) {
+//                    scope.reverse = !scope.reverse
+//                } else {
+//                    scope.by = scope.order;
+//                    scope.reverse = false;
+//                }
+//            }
+//        }
+//    };
+//});
 

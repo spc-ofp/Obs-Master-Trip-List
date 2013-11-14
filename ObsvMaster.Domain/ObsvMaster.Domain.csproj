@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="MasterObsTripHistory.cs" />
     <Compile Include="MasterObsTrip.cs" />
+    <Compile Include="Observer.cs" />
     <Compile Include="Port.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

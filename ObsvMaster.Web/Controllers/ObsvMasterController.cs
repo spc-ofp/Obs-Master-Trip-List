@@ -25,7 +25,7 @@ namespace ObsvMaster.Web.Controllers
             _obsvMasterRepo = new ObsvMasterRepository(WebApiApplication.UnitOfWork.Session);
         }
 
-        public IEnumerable<MasterObsTripModel> Get(String vesselName = "",int dateYear =0,string port="",string obsvCode="",string obsvTripCode="",string obsvProgCode="",int lastModifiedDateYear=0,string lastModifiedBy="",string statusCode="", int pageSize = 50, int offset = 0,string sortedBy="",string sortDir="")
+        public IEnumerable<MasterObsTripModel> Get(String vesselName = "", int dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "", int pageSize = 50, int offset = 0, string sortedBy = "", string sortDir = "")
         {
             if (pageSize < 10)
                 pageSize = 10;
@@ -33,7 +33,7 @@ namespace ObsvMaster.Web.Controllers
                 if (pageSize > 300)
                     pageSize = 300;
 
-            IEnumerable<MasterObsTrip> masterTripList = _obsvMasterRepo.GetObsTrips(vesselName, dateYear, port, obsvCode,obsvTripCode,obsvProgCode,lastModifiedDateYear,lastModifiedBy,statusCode ,pageSize, offset, sortedBy, sortDir);
+            IEnumerable<MasterObsTrip> masterTripList = _obsvMasterRepo.GetObsTrips(vesselName, dateYear, port, obsvCode, obsvTripCode, obsvProgCode, lastModifiedDateYear, lastModifiedBy, statusCode, pageSize, offset, sortedBy, sortDir);
             IList<MasterObsTripModel> masterTripModelList = new List<MasterObsTripModel>();
             foreach (MasterObsTrip trip in masterTripList)
                 masterTripModelList.Add(new MasterObsTripModel(trip));
@@ -46,7 +46,7 @@ namespace ObsvMaster.Web.Controllers
             IList<MasterObsTripModel> masterTripModelList = new List<MasterObsTripModel>();
             foreach (MasterObsTrip trip in masterTripList)
                 masterTripModelList.Add(new MasterObsTripModel(trip));
-            
+
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
 
@@ -57,16 +57,15 @@ namespace ObsvMaster.Web.Controllers
                 FileCultureName = "fr-FR" // use formats used in The Netherlands
             };
             CsvContext cc = new CsvContext();
-            cc.Write(masterTripModelList,writer,outputFileDescription);
+            cc.Write(masterTripModelList, writer, outputFileDescription);
             writer.Flush();
             stream.Position = 0;
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            
+
             response.Content = new StreamContent(stream);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
             response.Content.Headers.ContentDisposition.FileName = "ObserverTripList.csv";
-            //stream.Flush();
             return response;
         }
 
@@ -81,7 +80,7 @@ namespace ObsvMaster.Web.Controllers
 
         public IEnumerable<Object> GetAllStatus()
         {
-            return _repository.GetAll<Status>().Select(x => new { x.Code,x.Label });
+            return _repository.GetAll<Status>().Select(x => new { x.Code, x.Label });
         }
 
         public HttpResponseMessage GetCount(String vesselName = "", int? dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int? lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "")
@@ -95,7 +94,7 @@ namespace ObsvMaster.Web.Controllers
             return _repository.GetAll<Vessel>().Select(x => new { x.Name });
         }
 
-        public IEnumerable<Object> GetVesselLookUp(string search="")
+        public IEnumerable<Object> GetVesselLookUp(string search = "")
         {
             if (search.Length < 2)
                 return null;
@@ -103,17 +102,30 @@ namespace ObsvMaster.Web.Controllers
             return _repository.Find<Vessel>(x => x.Name.ToUpper().StartsWith(search)).Select(x => new { x.Name }).Take(10);
         }
 
+        public IEnumerable<Object> GetObserverLookUp(string search = "")
+        {
+            if (search.Length < 2)
+                return null;
+            search = search.ToUpper();
+            return _repository.Find<Observer>(x => x.FamilyName.ToUpper().Contains(search) || x.FirstName.ToUpper().Contains(search) || x.Code.ToUpper().Contains(search)).Select(x => new { x.Code, x.FirstName, x.FamilyName }).Take(10);
+        }
+
+        public Object GetObserver(string code)
+        {
+            return _repository.Find<Observer>(x => x.Code == code).Select(x => new { x.Code, x.FirstName, x.FamilyName }).FirstOrDefault();
+        }
+
         public IEnumerable<Object> GetPortNames()
         {
             return _repository.GetAll<Port>().Select(x => new { x.Name });
         }
 
-        public IEnumerable<Object> GetPortLookUp(string search="")
+        public IEnumerable<Object> GetPortLookUp(string search = "")
         {
             if (search.Length < 2)
                 return null;
             search = search.ToUpper();
-            return _repository.Find<Port>(x=>x.Name.ToUpper().StartsWith(search)).Select(x => new { x.Name }).Take(10);
+            return _repository.Find<Port>(x => x.Name.ToUpper().StartsWith(search)).Select(x => new { x.Name }).Take(10);
         }
 
         public IEnumerable<Object> GetObsProgLookUp(string search = "")
@@ -174,15 +186,33 @@ namespace ObsvMaster.Web.Controllers
             return message;
         }
 
-        public void Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
+            HttpResponseMessage message = new HttpResponseMessage();
+            try
+            {
+                MasterObsTrip trip = _repository.Get<MasterObsTrip>(id);
+                trip.IsActive = false;
+                _repository.SaveOrUpdate<MasterObsTrip>(trip);
+                WebApiApplication.UnitOfWork.Commit();
+                message = Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                message = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(e.Message),
+                    ReasonPhrase = "Critical Post Exception"
+                };
+            }
+            return message;
         }
 
         private MasterObsTrip ModelToTrip(MasterObsTripModel model)
         {
             MasterObsTrip trip = new MasterObsTrip();
             trip.EndDate = model.EndDate;
-            if(!String.IsNullOrEmpty(model.EndPortName))
+            if (!String.IsNullOrEmpty(model.EndPortName))
                 trip.EndPort = _repository.Find<Port>(x => x.Name == model.EndPortName).SingleOrDefault();
             trip.LastModifiedBy = model.LastModifiedBy;
             trip.LastModifiedDate = DateTime.Now;
@@ -201,6 +231,6 @@ namespace ObsvMaster.Web.Controllers
             return trip;
         }
 
-        
+
     }
 }

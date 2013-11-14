@@ -26,6 +26,7 @@ namespace ObsvMaster.DAL.Maps
             Map(x => x.LastModifiedDate).Column("last_modified_date");
             Map(x => x.LastModifiedBy).Column("last_modified_by");
             References(x => x.Status, "status_code");
+            Map(x => x.IsActive).Column("is_active");
         }
     }
 }

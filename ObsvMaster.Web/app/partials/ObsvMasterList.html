@@ -1,5 +1,5 @@
 ﻿<p>
-    <h5 class="center-block">Number of trips <span class="label label-default">{{totalItems}}</span> <a ng-click="exportToCsv()" target="_self"><i class="fa fa-download"></i></a> (csv)</h5>
+    <h5 class="center-block">Number of trips <span class="label label-default">{{totalItems}}</span> <a ng-click="exportToCsv()" target="_self"><i class="fa fa-download"></i></a>(csv)</h5>
 </p>
 <table class="table table-striped">
     <thead>
@@ -54,31 +54,32 @@
                     typeahead="prog.Code for prog in obsvProgTypeAhead($viewValue)"
                     ng-model="filterCriteria.obsvProgCode" />
             </td>
-                    <td><input class="form-control" type="text" on-enter-blur on-blur-change="filterResult()"
-                    ng-model="filterCriteria.statusCode" placeholder="Status"/></td>
+            <td>
+                <input class="form-control" type="text" on-enter-blur on-blur-change="filterResult()"
+                    ng-model="filterCriteria.statusCode" placeholder="Status" /></td>
             <td>
                 <input class="form-control" type="number" on-enter-blur on-blur-change="filterResult()"
-                    ng-model="filterCriteria.lastModifiedDateYear" placeholder="Year"/></td>
-<!--            <td>
+                    ng-model="filterCriteria.lastModifiedDateYear" placeholder="Year" /></td>
+            <!--            <td>
                 <input class="form-control" type="text" on-enter-blur on-blur-change="filterResult()"
                     ng-model="filterCriteria.lastModifiedBy" />
 
             </td>-->
             <td><a ng-click="cancelFilter()"><i class="fa fa-undo"></i></a></td>
         </tr>
-        <tr ng-repeat="trip in items">
+        <tr ng-repeat="trip in items" class="my-repeat-animation" id="trip_{{trip.Id}}">
             <td>{{trip.VesselName}}</td>
-            <td style="white-space: nowrap;">{{trip.StartDate | date:'dd-MMM-yyyy'}} <br />{{trip.EndDate | date:'dd-MMM-yyyy'}}</td>
-            <td>{{trip.StartPortName}}<br />{{trip.EndPortName}}</td>
-            <!--<td style="white-space: nowrap;">{{trip.EndDate | date:'dd-MMM-yyyy'}}</td>
-            <td>{{trip.EndPortName}}</td>-->
+            <td style="white-space: nowrap;">{{trip.StartDate | date:'dd-MMM-yyyy'}}
+                <br />
+                {{trip.EndDate | date:'dd-MMM-yyyy'}}</td>
+            <td>{{trip.StartPortName}}<br />
+                {{trip.EndPortName}}</td>
             <td>{{trip.ObsvCode}}</td>
             <td>{{trip.ObsvTripCode}}</td>
             <td>{{trip.ObsvProgCode}}</td>
             <td>{{trip.Status}}</td>
             <td style="white-space: nowrap;">{{trip.LastModifiedDate | date:'dd-MMM-yyyy'}}</td>
-<!--            <td>{{trip.LastModifiedBy}}</td>-->
-            <td><a ng-href="#/edit/{{trip.Id}}"><i class="fa fa-edit"></i></a></td>
+            <td style="white-space: nowrap;"><a ng-href="#/edit/{{trip.Id}}"><i class="fa fa-edit"></i></a> <a ng-click="askDelete()"><i class="fa fa-times"></i></a></td>
         </tr>
     </tbody>
 </table>

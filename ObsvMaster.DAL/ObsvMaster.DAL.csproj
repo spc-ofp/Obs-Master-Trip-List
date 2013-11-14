@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Maps\MasterObsTripHistoryMap.cs" />
     <Compile Include="Maps\MasterObsTripMap.cs" />
+    <Compile Include="Maps\ObserverMap.cs" />
     <Compile Include="Maps\PortMap.cs" />
     <Compile Include="Maps\ProgramMap.cs" />
     <Compile Include="Maps\StatusMap.cs" />

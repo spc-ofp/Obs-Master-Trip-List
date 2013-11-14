@@ -61,7 +61,18 @@
     <div class="form-group">
         <label class="control-label col-sm-2" for="ObsvCode">Observer Code</label>
         <div class="col-sm-2">
-            <input type="text" ng-model="trip.ObsvCode" class="form-control">
+            <!--<input type="text" ng-model="trip.ObsvCode" class="form-control">-->
+            <input type="text" class="form-control"
+                autocomplete="off"
+                typeahead-min-length="2"
+                typeahead-wait-ms="30"
+                typeahead-editable="false"
+                typeahead-on-select="setKnownObserver($item, $model, $label)"
+                typeahead="observer.Code as ('['+observer.Code+'] -'+observer.FirstName+' '+observer.FamilyName) for observer in observerTypeAhead($viewValue)"
+                ng-model="trip.ObsvCode" />
+        </div>
+        <div class="col-sm-8">
+            <p class="form-control-static">{{selectedObserver.FirstName}} {{selectedObserver.FamilyName}}</p>
         </div>
     </div>
     <div class="form-group">
