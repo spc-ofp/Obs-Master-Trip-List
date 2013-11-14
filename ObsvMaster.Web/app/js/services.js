@@ -19,7 +19,8 @@ services.factory('ObsvMasterResource', function ($resource) {
             update: { method: 'PUT' },
             getCount: { method: 'GET', params: { action: 'GetCount' }, isArray: false },
             getHistory: { method: 'GET', params: { action: 'GetHistory' }, isArray: true },
-            getAllStatus: { method: 'GET', params: { action: 'GetAllStatus' }, isArray: true }
+            getAllStatus: { method: 'GET', params: { action: 'GetAllStatus' }, isArray: true },
+            getAllTrips: { method: 'GET', params: { action: 'GetAllTrips' }, isArray: false }
         }
     );
 });

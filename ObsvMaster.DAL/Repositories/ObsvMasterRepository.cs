@@ -18,15 +18,16 @@ namespace ObsvMaster.DAL.Repositories
             _session = session;
         }
 
-        public List<MasterObsTrip> GetObsTrips(String vesselName, int dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "",int pageSize = -1, int offset = 0, string sortedBy = "", string sortDir = "")
+        public List<MasterObsTrip> GetObsTrips(String vesselName, int? dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int? lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "",int pageSize = -1, int offset = 0, string sortedBy = "", string sortDir = "")
         {
             var query = _session.Query<MasterObsTrip>();
             if (!String.IsNullOrEmpty(vesselName))
                 query = query.Where(x => x.Vessel.Name.Contains(vesselName));
-            if (dateYear > 0)
+            if (dateYear.HasValue && dateYear > 0)
                 query = query.Where(x => x.StartDate.Year == dateYear || x.EndDate.Year == dateYear);
             if (!String.IsNullOrEmpty(port))
-                query = query.Where(x => x.StartPort.Name == port || x.EndPort.Name == port);
+                //filter only on departure ports
+                query = query.Where(x => x.StartPort.Name == port);
             if (!String.IsNullOrEmpty(obsvCode))
                 query = query.Where(x => x.ObsvCode == obsvCode);
             if (!String.IsNullOrEmpty(obsvTripCode))
@@ -35,7 +36,7 @@ namespace ObsvMaster.DAL.Repositories
                 query = query.Where(x => x.ObsvProg.Code == obsvProgCode);
             if (!String.IsNullOrEmpty(lastModifiedBy))
                 query = query.Where(x => x.LastModifiedBy == lastModifiedBy);
-            if (lastModifiedDateYear > 0)
+            if (lastModifiedDateYear.HasValue && lastModifiedDateYear > 0)
                 query = query.Where(x => x.LastModifiedDate.Year == lastModifiedDateYear);
             if (!String.IsNullOrEmpty(statusCode))
                 query = query.Where(x => x.Status.Code == statusCode);

@@ -1,4 +1,4 @@
-﻿var ObsvMasterApp = angular.module("ObsvMasterApp", ['ngRoute', 'services', 'ngResource', 'controllers', 'ui.directives','directives','ui.bootstrap']).
+﻿var ObsvMasterApp = angular.module("ObsvMasterApp", ['ngRoute', 'services', 'ngResource', 'controllers', 'ui.directives', 'directives', 'ui.bootstrap']).
     config(function ($routeProvider) {
         $routeProvider.
             when('/edit/:itemId', { controller: 'ObsvMasterEditCtrl', templateUrl: 'partials/ObsvMasterDetail.html' }).

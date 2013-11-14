@@ -1,11 +1,15 @@
-﻿using ObsvMaster.DAL.Repositories;
+﻿using LINQtoCSV;
+using ObsvMaster.DAL.Repositories;
 using ObsvMaster.Domain;
 using ObsvMaster.Web.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace ObsvMaster.Web.Controllers
@@ -36,6 +40,36 @@ namespace ObsvMaster.Web.Controllers
             return masterTripModelList;
         }
 
+        public HttpResponseMessage GetAllTrips(String vesselName = "", int? dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int? lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "")
+        {
+            IEnumerable<MasterObsTrip> masterTripList = _obsvMasterRepo.GetObsTrips(vesselName, dateYear, port, obsvCode, obsvTripCode, obsvProgCode, lastModifiedDateYear, lastModifiedBy, statusCode);
+            IList<MasterObsTripModel> masterTripModelList = new List<MasterObsTripModel>();
+            foreach (MasterObsTrip trip in masterTripList)
+                masterTripModelList.Add(new MasterObsTripModel(trip));
+            
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+
+            CsvFileDescription outputFileDescription = new CsvFileDescription
+            {
+                SeparatorChar = ',', // comma delimited
+                FirstLineHasColumnNames = true, // no column names in first record
+                FileCultureName = "fr-FR" // use formats used in The Netherlands
+            };
+            CsvContext cc = new CsvContext();
+            cc.Write(masterTripModelList,writer,outputFileDescription);
+            writer.Flush();
+            stream.Position = 0;
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            
+            response.Content = new StreamContent(stream);
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = "ObserverTripList.csv";
+            //stream.Flush();
+            return response;
+        }
+
         public IEnumerable<MasterObsTripModel> GetHistory(int id)
         {
             IEnumerable<MasterObsTripHistory> historyList = _repository.Find<MasterObsTripHistory>(x => x.Id == id).OrderByDescending(x => x.LastModifiedDate);
@@ -50,10 +84,11 @@ namespace ObsvMaster.Web.Controllers
             return _repository.GetAll<Status>().Select(x => new { x.Code,x.Label });
         }
 
-        public HttpResponseMessage GetCount(String vesselName = "", int dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "")
+        public HttpResponseMessage GetCount(String vesselName = "", int? dateYear = 0, string port = "", string obsvCode = "", string obsvTripCode = "", string obsvProgCode = "", int? lastModifiedDateYear = 0, string lastModifiedBy = "", string statusCode = "")
         {
             return new HttpResponseMessage { Content = new StringContent("{\"count\":" + _obsvMasterRepo.GetObsTrips(vesselName, dateYear, port, obsvCode, obsvTripCode, obsvProgCode, lastModifiedDateYear, lastModifiedBy, statusCode).Count.ToString() + "}", System.Text.Encoding.UTF8, "application/json") };
         }
+
 
         public IEnumerable<Object> GetVesselNames()
         {

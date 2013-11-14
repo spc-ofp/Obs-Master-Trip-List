@@ -112,10 +112,6 @@ function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
 
     $scope.cancelFilter = function () {
         $scope.filterCriteria.vesselName = undefined;
-        //$scope.filterCriteria.startDateYear = undefined;
-        //$scope.filterCriteria.startPort = undefined;
-        //$scope.filterCriteria.endDateYear = undefined;
-        //$scope.filterCriteria.endPort = undefined;
         $scope.filterCriteria.dateYear = undefined;
         $scope.filterCriteria.port = undefined;
         $scope.filterCriteria.obsvCode = undefined;
@@ -162,6 +158,12 @@ function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
         });
     };
 
+    $scope.exportToCsv = function () {
+        //console.log($.param($scope.filterCriteria));
+        window.open('../api/obsvmaster/GetAllTrips?' + $.param($scope.filterCriteria));
+        //ObsvMasterResource.getAllTrips($scope.filterCriteria);
+    }
+
     //Will be called when filtering the grid, will reset the page number to one
     $scope.filterResult = function () {
         $scope.filterCriteria.pageNumber = 1;
@@ -202,6 +204,8 @@ function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
             return "";
         }
     };
+
+
 
     $scope.obsvProgTypeAhead = function (viewValue) {
         if (viewValue.length < 10) {
