@@ -20,6 +20,7 @@ namespace ObsvMaster.Web.Models
         public String Status { get; set; }
         public DateTime LastModifiedDate { get; set; }
         public String LastModifiedBy { get; set; }
+        public Boolean IsActive { get; set; }
 
         public MasterObsTripModel(MasterObsTrip trip)
         {
@@ -40,6 +41,7 @@ namespace ObsvMaster.Web.Models
             if (trip.Status != null)
                 this.Status = trip.Status.Code;
             this.LastModifiedBy = trip.LastModifiedBy;
+            this.IsActive = trip.IsActive;
         }
 
         public MasterObsTripModel(MasterObsTripHistory trip)
@@ -61,6 +63,7 @@ namespace ObsvMaster.Web.Models
             if (trip.Status != null)
                 this.Status = trip.Status.Code;
             this.LastModifiedBy = trip.LastModifiedBy;
+            this.IsActive = trip.IsActive;
         }
 
         public MasterObsTripModel()

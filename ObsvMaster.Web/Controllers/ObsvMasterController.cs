@@ -193,6 +193,7 @@ namespace ObsvMaster.Web.Controllers
             {
                 MasterObsTrip trip = _repository.Get<MasterObsTrip>(id);
                 trip.IsActive = false;
+                trip.LastModifiedDate = DateTime.Now;
                 _repository.SaveOrUpdate<MasterObsTrip>(trip);
                 WebApiApplication.UnitOfWork.Commit();
                 message = Request.CreateResponse(HttpStatusCode.OK);
@@ -228,6 +229,7 @@ namespace ObsvMaster.Web.Controllers
                 trip.Vessel = _repository.Find<Vessel>(x => x.Name == model.VesselName).SingleOrDefault();
             if (!String.IsNullOrEmpty(model.Status))
                 trip.Status = _repository.Get<Status>(model.Status);
+            trip.IsActive = model.IsActive;
             return trip;
         }
 
