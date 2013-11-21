@@ -1,15 +1,14 @@
-﻿<form name="form" role="form" class="form-horizontal">
+﻿<form name="myForm" role="form" class="form-horizontal">
     <div class="form-group">
         <label class="control-label col-sm-2" for="VesselName">Vessel Name</label>
         <div class="col-sm-3">
-            <!--<select name="VesselList" ng-options="v.Name as v.Name for v in vesselList" ng-model="trip.VesselName" class="form-control" id="VesselName">
-            </select>-->
             <input type="text" class="form-control"
                 autocomplete="off"
                 typeahead-min-length="2"
                 typeahead-wait-ms="30"
                 typeahead="vessel.Name for vessel in vesselTypeAhead($viewValue)"
-                ng-model="trip.VesselName" />
+                ng-model="trip.VesselName"
+                required />
         </div>
     </div>
     <div class="form-group">
@@ -20,7 +19,8 @@
                 typeahead-min-length="2"
                 typeahead-wait-ms="30"
                 typeahead="port.Name for port in portTypeAhead($viewValue)"
-                ng-model="trip.StartPortName" />
+                ng-model="trip.StartPortName" 
+                />
         </div>
     </div>
 
@@ -41,7 +41,7 @@
             <div class="input-group">
                 <input type="text" id="StartDate" class="form-control" placeholder="dd MMM yyyy"
                     ui-date='{ dateFormat: "d M yy" };' ui-date-format
-                    ng-model="trip.StartDate" />
+                    ng-model="trip.StartDate" required />
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
         </div>
@@ -53,7 +53,7 @@
             <div class="input-group">
                 <input type="text" id="EndDate" class="form-control" placeholder="dd MMM yyyy"
                     ui-date='{ dateFormat: "d M yy" };' ui-date-format
-                    ng-model="trip.EndDate" />
+                    ng-model="trip.EndDate" required/>
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
         </div>
@@ -61,7 +61,6 @@
     <div class="form-group">
         <label class="control-label col-sm-2" for="ObsvCode">Observer Code</label>
         <div class="col-sm-2">
-            <!--<input type="text" ng-model="trip.ObsvCode" class="form-control">-->
             <input type="text" class="form-control"
                 autocomplete="off"
                 typeahead-min-length="2"
@@ -84,7 +83,6 @@
     <div class="form-group">
         <label class="control-label col-sm-2" for="ObsvProgCode">Observer Program</label>
         <div class="col-sm-2">
-            <!--<input type="text" ng-model="trip.ObsvProgCode" class="form-control">-->
             <input type="text" class="form-control"
                 autocomplete="off"
                 typeahead-min-length="2"
@@ -111,7 +109,7 @@
 
     <div class="form-actions">
         <div class="col-sm-10 col-sm-offset-2">
-            <button class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid">Submit</button>
+            <button class="btn btn-primary" ng-click="save()" ng-disabled="myForm.$invalid">Submit</button>
             <a href="#/" class="btn">Cancel</a>
         </div>
     </div>
@@ -133,14 +131,11 @@
                 {{trip.EndDate | date:'dd-MMM-yyyy'}}</td>
             <td>{{trip.StartPortName}}<br />
                 {{trip.EndPortName}}</td>
-            <!--<td style="white-space: nowrap;">{{trip.EndDate | date:'dd-MMM-yyyy'}}</td>
-            <td>{{trip.EndPortName}}</td>-->
             <td>{{trip.ObsvCode}}</td>
             <td>{{trip.ObsvTripCode}}</td>
             <td>{{trip.ObsvProgCode}}</td>
             <td>{{trip.Status}}</td>
             <td style="white-space: nowrap;">{{trip.LastModifiedDate | date:'dd-MMM-yyyy'}}</td>
-
             <td>{{trip.LastModifiedBy}}</td>
         </tr>
     </tbody>

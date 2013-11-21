@@ -32,3 +32,7 @@
 .my-repeat-animation.ng-move.ng-move-active {
   opacity:1;
 }
+
+input.ng-invalid {
+    border: 1px solid red;
+}
