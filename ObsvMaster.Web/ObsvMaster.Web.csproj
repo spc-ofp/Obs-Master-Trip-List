@@ -187,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\css\angular-ui.css" />
+    <Content Include="app\css\local.css" />
     <Content Include="app\css\font-awesome.min.css" />
     <Content Include="app\css\images\animated-overlay.gif" />
     <Content Include="app\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />

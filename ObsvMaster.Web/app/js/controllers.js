@@ -159,6 +159,8 @@ function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
         offset: 0,
     };
 
+    $scope.isLoading = false;
+
     $scope.cancelFilter = function () {
         $scope.filterCriteria.vesselName = undefined;
         $scope.filterCriteria.dateYear = undefined;
@@ -212,15 +214,18 @@ function ObsvMasterListCtrl($scope, ObsvMasterResource, $q) {
     //The function that is responsible of fetching the result from the server and setting the grid to the new result
     $scope.fetchResult = function () {
         $scope.filterCriteria.offset = ($scope.filterCriteria.pageNumber - 1) * $scope.filterCriteria.pageSize;
+        $scope.isLoading = true;
         return $q.all([
             ObsvMasterResource.query($scope.filterCriteria).$promise,
             ObsvMasterResource.getCount($scope.filterCriteria).$promise
         ]).then(function (data) {
             $scope.items = data[0];
             $scope.totalItems = data[1].count;
+            $scope.isLoading = false;
         }, function () {
             $scope.items = [];
             $scope.totalItems = 0;
+            $scope.isLoading = false;
         });
     };
 
