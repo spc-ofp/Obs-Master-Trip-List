@@ -64,6 +64,9 @@ function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams,
     //$scope.vesselList = ObsvMasterResource.getAllVessels();
     //$scope.portList = ObsvMasterResource.getAllPorts();
     
+    $scope.validateForm = function () { return true; }
+
+    $scope.selectedObserver = { Code: '', FirstName: '', FamilyName: '' };
 
     $scope.headers = [
         { title: 'Vessel', value: 'VesselName' },
@@ -89,7 +92,6 @@ function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams,
     };
 
     $scope.setKnownObserver = function ($item, $model, $label) {
-        //console.log($item);
         $scope.selectedObserver = $item;
     };
 
@@ -100,6 +102,14 @@ function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams,
             console.log("not searching for value:", viewValue);
             return "";
         }
+    };
+
+    $scope.label = function (observer) {
+        //console.log(observer);
+        if (observer && observer.Code)
+            return '[' + observer.Code + '] -' + observer.FirstName + ' ' + observer.FamilyName;
+        else
+            return observer;
     };
 
     $scope.obsvProgTypeAhead = function (viewValue) {
@@ -136,7 +146,9 @@ function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams,
     ]).then(function (data) {
         $scope.trip = data[0];
         $scope.historyList = data[1];
-        $scope.selectedObserver = ObsvMasterResource.getObserver({ code: $scope.trip.ObsvCode });
+        if ($scope.trip.ObsvCode) {
+            $scope.selectedObserver = ObsvMasterResource.getObserver({ code: $scope.trip.ObsvCode });
+        }
         $scope.trip.StartDate = moment($scope.trip.StartDate).format("YYYY-MM-DDTHH:mm:ssZ");
         $scope.trip.EndDate = moment($scope.trip.EndDate).format("YYYY-MM-DDTHH:mm:ssZ");
         

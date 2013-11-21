@@ -67,7 +67,7 @@
                 typeahead-wait-ms="30"
                 typeahead-editable="false"
                 typeahead-on-select="setKnownObserver($item, $model, $label)"
-                typeahead="observer.Code as ('['+observer.Code+'] -'+observer.FirstName+' '+observer.FamilyName) for observer in observerTypeAhead($viewValue)"
+                typeahead="observer.Code as label(observer) for observer in observerTypeAhead($viewValue)"
                 ng-model="trip.ObsvCode" />
         </div>
         <div class="col-sm-8">
@@ -109,7 +109,7 @@
 
     <div class="form-actions">
         <div class="col-sm-10 col-sm-offset-2">
-            <button class="btn btn-primary" ng-click="save()" ng-disabled="myForm.$invalid">Submit</button>
+            <button class="btn btn-primary" ng-click="save()" ng-disabled="myForm.$invalid || !validateForm()">Submit</button>
             <a href="#/" class="btn">Cancel</a>
         </div>
     </div>
