@@ -105,7 +105,6 @@ function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams,
     };
 
     $scope.label = function (observer) {
-        //console.log(observer);
         if (observer && observer.Code)
             return '[' + observer.Code + '] -' + observer.FirstName + ' ' + observer.FamilyName;
         else
