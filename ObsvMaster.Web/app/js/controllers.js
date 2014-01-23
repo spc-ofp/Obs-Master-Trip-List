@@ -19,8 +19,23 @@ function GetHeader() {
 }
 
 function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
-    //$scope.vesselList = ObsvMasterResource.getAllVessels();
-    //$scope.portList = ObsvMasterResource.getAllPorts();
+    $scope.validateForm = function () { return true; }
+
+    $scope.selectedObserver = { Code: '', FirstName: '', FamilyName: '' };
+
+    $scope.headers = [
+        { title: 'Vessel', value: 'VesselName' },
+        { title: 'Dates', value: 'StartDate' },
+        { title: 'Ports', value: 'StartPortName' },
+        { title: 'Obsv Code', value: 'ObsvCode' },
+        { title: 'Obsv Trip', value: 'ObsvTripCode' },
+        { title: 'Obsv Prog', value: 'ObsvProgCode' },
+        { title: 'Status', value: 'Status' },
+        { title: 'Updated', value: 'LastModifiedDate' },
+        { title: 'By', value: 'LastModifiedBy' }
+    ];
+
+    $scope.statusList = ObsvMasterResource.getAllStatus();
 
     $scope.portTypeAhead = function (viewValue) {
         if (viewValue.length < 10) {
@@ -29,6 +44,26 @@ function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
             console.log("not searching for value:", viewValue);
             return "";
         }
+    };
+
+    $scope.setKnownObserver = function ($item, $model, $label) {
+        $scope.selectedObserver = $item;
+    };
+
+    $scope.observerTypeAhead = function (viewValue) {
+        if (viewValue.length < 10) {
+            return ObsvMasterResource.getObserverLookUp({ search: viewValue }).$promise;
+        } else {
+            console.log("not searching for value:", viewValue);
+            return "";
+        }
+    };
+
+    $scope.label = function (observer) {
+        if (observer && observer.Code)
+            return '[' + observer.Code + '] -' + observer.FirstName + ' ' + observer.FamilyName;
+        else
+            return observer;
     };
 
     $scope.obsvProgTypeAhead = function (viewValue) {
@@ -49,7 +84,6 @@ function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
         }
     };
 
-    $scope.statusList = ObsvMasterResource.getAllStatus();
 
     $scope.save = function () {
         ObsvMasterResource.save($scope.trip, function () {
@@ -58,6 +92,7 @@ function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
             console.log("insert failed");
         });
     };
+
 }
 
 function ObsvMasterEditCtrl($scope, $location, ObsvMasterResource, $routeParams,$q) {
