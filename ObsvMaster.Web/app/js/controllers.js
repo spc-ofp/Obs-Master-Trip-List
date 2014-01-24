@@ -85,6 +85,10 @@ function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
     };
 
     $scope.save = function () {
+        var startDate = moment($scope.trip.StartDate).format("YYYY-MM-DDT") + "12:00:00Z";
+        $scope.trip.StartDate = startDate;
+        var endDate = moment($scope.trip.EndDate).format("YYYY-MM-DDT") + "12:00:00Z";
+        $scope.trip.EndDate = endDate;
         ObsvMasterResource.save($scope.trip, function () {
             $location.path('/');
         }, function () {
