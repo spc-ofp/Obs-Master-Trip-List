@@ -149,6 +149,7 @@ namespace ObsvMaster.Web.Controllers
             try
             {
                 MasterObsTrip trip = ModelToTrip(model);
+                trip.IsActive = true;
                 _repository.Save<MasterObsTrip>(trip);
                 WebApiApplication.UnitOfWork.Commit();
                 message = Request.CreateResponse(HttpStatusCode.OK);

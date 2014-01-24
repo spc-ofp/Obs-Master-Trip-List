@@ -84,7 +84,6 @@ function ObsvMasterCreateCtrl($scope, $location, ObsvMasterResource) {
         }
     };
 
-
     $scope.save = function () {
         ObsvMasterResource.save($scope.trip, function () {
             $location.path('/');

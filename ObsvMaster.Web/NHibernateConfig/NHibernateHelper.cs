@@ -21,15 +21,20 @@ namespace ObsvMaster.Web.NHibernateConfig
 
         private static ISessionFactory CreateSessionFactory()
         {
-            IPersistenceConfigurer cfg =
-                MsSqlConfiguration.MsSql2008.ConnectionString(c => c
-                        .FromConnectionStringWithKey("ObsvMasterConnection")).ShowSql();
+            //IPersistenceConfigurer cfg =
+            //    MsSqlConfiguration.MsSql2008.ConnectionString(c => c
+            //            .FromConnectionStringWithKey("ObsvMasterConnection")).ShowSql();
 
             NHibernate.Cfg.Configuration config = Fluently.Configure().
-                Database(MsSqlConfiguration.MsSql2008.ConnectionString(c => c.FromConnectionStringWithKey("ObsvMasterConnection"))).
+                Database(MsSqlConfiguration.MsSql2008.ConnectionString(c => c.FromConnectionStringWithKey("ObsvMasterConnection")).ShowSql()).
                 Mappings(m => m.FluentMappings.AddFromAssemblyOf<PortMap>()).
                 CurrentSessionContext<ThreadStaticSessionContext>().
+                ExposeConfiguration(x =>{x.SetInterceptor(new SqlStatementInterceptor());}).
                 BuildConfiguration();
+            //config.ExposeConfiguration(x =>
+            //{
+            //    x.SetInterceptor(new SqlStatementInterceptor());
+            //});
             return config.BuildSessionFactory();
 
         }

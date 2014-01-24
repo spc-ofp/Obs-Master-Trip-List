@@ -182,6 +182,7 @@
     </Compile>
     <Compile Include="Models\MasterObsTripModel.cs" />
     <Compile Include="NHibernateConfig\NHibernateHelper.cs" />
+    <Compile Include="NHibernateConfig\SqlStatementInterceptor.cs" />
     <Compile Include="NHibernateConfig\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
