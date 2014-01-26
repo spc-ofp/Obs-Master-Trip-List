@@ -99,7 +99,7 @@ namespace ObsvMaster.Web.Controllers
             if (search.Length < 2)
                 return null;
             search = search.ToUpper();
-            return _repository.Find<Vessel>(x => x.Name.ToUpper().StartsWith(search)).Select(x => new { x.Name }).Take(10);
+            return _repository.Find<Vessel>(x => x.Name.ToUpper().StartsWith(search)).Select(x => new { x.Name }).Take(20);
         }
 
         public IEnumerable<Object> GetObserverLookUp(string search = "")
